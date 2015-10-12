@@ -1,0 +1,15 @@
+{
+    "name": "gxapplications/angularmaterialbundle",
+    "type": "symfony-bundle",
+    "description": "This bundle will provide AngularMaterial JS library, and helpers/tests/demos",
+    "keywords": ["angular", "material", "angularjs", "materialdesign"],
+    "license": "MIT",
+    "require": {
+
+    },
+    "autoload":{
+        "psr-4":{
+            "GXApplications\\AngularMaterialBundle\\": ""
+        }
+    }
+}
