@@ -1,0 +1,6 @@
+gx_angular_material_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: GXAngularMaterialBundle:Default:index }
+_demo:
+    resource: "@GXAngularMaterialBundle/Controller/DemosController.php"
+    type:     annotation
