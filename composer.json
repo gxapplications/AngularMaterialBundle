@@ -1,11 +1,12 @@
 {
-    "name": "gxapplications/angularmaterialbundle",
+    "name": "gxapplications/angular-material-bundle",
     "type": "symfony-bundle",
     "description": "This bundle will provide AngularMaterial JS library, and helpers/tests/demos",
     "keywords": ["angular", "material", "angularjs", "materialdesign"],
     "license": "MIT",
     "require": {
-
+        "php": ">=5.6.0",
+        "sunra/angularjs-symfony2-bundle" : "dev-master"
     },
     "autoload":{
         "psr-4":{
