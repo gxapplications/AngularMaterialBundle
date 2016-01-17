@@ -14,16 +14,22 @@
     <body ng-app="MyApp">
     
 		{% block body %}{% endblock %}
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
         
-        <script src="{{ asset('bundles/sunraangular/js/angular/angular-1.3.0/angular.min.js') }}"></script>
-        <script src="{{ asset('bundles/sunraangular/js/angular/angular-1.3.0/angular-animate.min.js') }}"></script>
-        <script src="{{ asset('bundles/sunraangular/js/angular/angular-1.3.0/angular-route.min.js') }}"></script>
-        <script src="{{ asset('bundles/sunraangular/js/angular/angular-1.3.0/angular-aria.min.js') }}"></script>
-		<script src="{{ asset('bundles/sunraangular/js/thirdparty/bindonce/bindonce.js') }}"></script>
+        <script src="{{ asset('bundles/sunraangular/js/angular/angular-1.4.1/angular.min.js') }}"></script>
+        <script src="{{ asset('bundles/sunraangular/js/angular/angular-1.4.1/angular-animate.min.js') }}"></script>
+        <script src="{{ asset('bundles/sunraangular/js/angular/angular-1.4.1/angular-route.min.js') }}"></script>
+        <script src="{{ asset('bundles/sunraangular/js/angular/angular-1.4.1/angular-aria.min.js') }}"></script>
 		<script src="{{ asset('bundles/sunraangular/js/thirdparty/angular-local-storage/angular-local-storage.js') }}"></script>
 		<script src="{{ asset('bundles/sunraangular/js/thirdparty/angular-ui/bootstrap/bootstrap-gh-pages/ui-bootstrap-0.11.0.min.js') }}"></script>
 		<script src="{{ asset('bundles/gxangularmaterial/js/hammer.min.js') }}"></script>
 		<script src="{{ asset('bundles/gxangularmaterial/js/angular-material.min.js') }}"></script>
+
+        <script src="{{ asset('bundles/gxangularmaterial/js/gridList.js') }}"></script>
+        <script src="{{ asset('bundles/gxangularmaterial/js/jquery.gridList.js') }}"></script>
+        <script src="{{ asset('bundles/gxangularmaterial/js/jquery.ui.touch-punch.min.js') }}"></script>
 	    
         {% block javascripts %}{% endblock %}
         

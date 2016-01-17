@@ -9,13 +9,15 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class DemosController extends Controller
 {
     /**
-     * @Route("/button", name="_demo_button")
+     * @Route("/gridlist", name="_demo_gridlist")
      * @Template()
      */
-    public function buttonAction()
+    public function gridlistAction()
     {
-        return array(
-                // ...
-            );    }
+
+        return [
+
+        ];
+    }
 
 }
