@@ -20,4 +20,15 @@ class DemosController extends Controller
         ];
     }
 
+    /**
+     * @Route("/gridlist_card", name="_demo_gridlist_card")
+     * @Template()
+     */
+    public function gridlistCardAction()
+    {
+
+        return [
+            'id' => 42
+        ];
+    }
 }
