@@ -1,22 +1,11 @@
 <div>
 	<div ng-controller="CardCtrl-{{ id }}">
-		<md-card class="md-whiteframe-6dp">
-			<md-card-title>
-				<md-card-title-text>
-					<span class="md-headline">Card with image</span>
-					<span class="md-subhead">Large</span>
-				</md-card-title-text>
-			</md-card-title>
-			<md-card-actions layout="row" layout-align="end center">
-				<md-button>Action 1</md-button>
-				<md-button>Action 2</md-button>
-			</md-card-actions>
-		</md-card>
+		-{{ id }}-
 	</div>
 
 	<script>
 	    angular.module('MyApp', ['ngMaterial']).controller("CardCtrl-{{ id }}", function($scope) {
-			console.log('bonjour');
+			console.log('bonjour {{ id }}');
 		});
 	</script>
 </div>

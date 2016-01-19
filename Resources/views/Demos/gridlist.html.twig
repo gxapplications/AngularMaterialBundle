@@ -5,13 +5,8 @@
 {% block stylesheets %}
 	{# more on https://github.com/angular/bower-material/tree/master/themes #}
 	<style type="text/css">
-		.grid-container {
-			position: absolute;
-			top: 66px;
-			left: 0;
-			right: 10px;
-			bottom: 0;
-			overflow: auto;
+		md-content {
+			background: #444
 		}
 		.grid {
 			position: relative;
@@ -45,8 +40,7 @@
 		}
 		.grid li .inner {
 			position: absolute;
-			background: #fff;
-			border: 1px solid #bbb;
+			background: #555;
 			top: 0;
 			bottom: 10px;
 			left: 10px;
@@ -68,193 +62,112 @@
 			transition: none;
 		}
 		.grid li.position-highlight .inner {
-			border: none;
-			background: #ccc;
-		}
-		.grid .controls {
-			position: absolute;
-			top: 0;
-			right: 0;
-			float: right;
-			font-size: 0.4em;
-			font-weight: normal;
-			line-height: 1em;
-			opacity: 0;
-			-webkit-transition: opacity 0.2s;
-			transition: opacity 0.2s;
-		}
-		.grid .controls .resize {
-			font-size: 0.6em;
-			float: left;
-			margin: 5px 5px 0 0;
-			padding: 0.3em;
-			background: #fafafa;
-			color: #444;
-			text-decoration: none;
-		}
-		.grid .controls .resize:hover {
-			background: #f1f1f1;
-		}
-		.grid li:hover .controls {
-			opacity: 1;
+			background: #333;
 		}
 	</style>
 {% endblock %}
 
 {% block body %}
-	<h1>Welcome to the Demos:gridlist page</h1>
-	<div class="demo-content ng-scope">
-		<div ng-controller="AppCtrl">
-			<a href="#remove-row" class="button remove-row">-</a>
-			<a href="#add-row" class="button add-row">+</a>
-			<hr />
+<div layout="column" layout-fill style="overflow:hidden;">
 
-			<div class="grid-container">
-				<ul id="grid" class="grid">
-					<li class="position-highlight">
-						<div class="inner">MOUAHAHAHAH</div>
-					</li>
-				</ul>
-			</div>
-
+	<md-toolbar md-scroll-shrink>
+		<div class="md-toolbar-tools">
+			<md-button class="md-icon-button" aria-label="Settings">
+				<md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
+			</md-button>
+			<h2>
+				<span>Toolbar with Icon Buttons</span>
+			</h2>
+			<span flex></span>
+			<md-button class="md-icon-button" aria-label="Favorite">
+				<md-icon md-svg-icon="img/icons/favorite.svg" style="color: greenyellow;"></md-icon>
+			</md-button>
+			<md-button class="md-icon-button" aria-label="More">
+				<md-icon md-svg-icon="img/icons/more_vert.svg"></md-icon>
+			</md-button>
 		</div>
-	</div>
+	</md-toolbar>
+
+	<md-content flex>
+		<div flex ng-controller="AppCtrl">
+			<ul id="grid" class="grid">
+				<li class="position-highlight">
+					<div class="inner md-whiteframe-1dp"></div>
+				</li>
+				<li class="position-card">
+					<md-card class="md-whiteframe-6dp inner">
+						...
+					</md-card>
+				</li>
+			</ul>
+		</div>
+	</md-content>
+
+	<md-fab-toolbar class="md-fab-bottom-right" style="width:100%" md-direction="left">
+		<md-fab-trigger class="align-with-text">
+			<md-button aria-label="menu" class="md-fab md-warn">
+				<md-icon md-svg-src="img/icons/menu.svg"></md-icon>
+			</md-button>
+		</md-fab-trigger>
+		<md-toolbar>
+			<md-fab-actions class="md-toolbar-tools">
+				<md-button aria-label="comment" class="remove-row">
+					Remove row
+				</md-button>
+				<md-button aria-label="comment" class="add-row">
+					Add row
+				</md-button>
+			</md-fab-actions>
+		</md-toolbar>
+	</md-fab-toolbar>
+</div>
+
 {% endblock %}
-
-
 
 {% block javascripts %}
 	<script>
-		function compileAngularElement(elSelector) {
-			var elSelector = (typeof elSelector == 'string') ? elSelector : null ;
-			// The new element to be added
-			if (elSelector != null ) {
-				var $div = $( elSelector );
-				// The parent of the new element
-				var $target = $("[ng-app]");
-				angular.element($target).injector().invoke(['$compile', function ($compile) {
-					var $scope = angular.element($target).scope();
-					$compile($div)($scope);
-					// Finally, refresh the watch expressions in the new element
-					$scope.$apply();
-				}]);
-			}
-		}
+		var app = angular.module('MyApp', ['ngMaterial']);
+		app.controller("AppCtrl", function($scope, $compile) {
 
-	    angular.module('MyApp', ['ngMaterial']).controller("AppCtrl", function($scope, $compile) {
-			$.get(
-					'gridlist_card',
-					{},
-					function(successData) {
-						$('ul#grid > li > div.inner').first().html(successData);
-						compileAngularElement($('ul#grid > li > div.inner').first());
-					}
-			);
 		});
 
-		var fixtures = {};
-		fixtures.DEMO = [
-			{w: 1, h: 1, x: 0, y: 0},
-			{w: 1, h: 2, x: 0, y: 1},
-			{w: 2, h: 2, x: 1, y: 0},
-			{w: 1, h: 1, x: 1, y: 2},
-			{w: 2, h: 1, x: 2, y: 2},
-			{w: 1, h: 1, x: 3, y: 0},
-			{w: 1, h: 1, x: 3, y: 1},
-			{w: 1, h: 0, x: 4, y: 0},
-			{w: 3, h: 1, x: 5, y: 0},
-			{w: 2, h: 1, x: 5, y: 1},
-			{w: 1, h: 1, x: 5, y: 2},
-			{w: 2, h: 1, x: 6, y: 2},
-			{w: 1, h: 1, x: 7, y: 1},
-			{w: 2, h: 0, x: 8, y: 0},
-			{w: 1, h: 1, x: 10, y: 0},
-			{w: 1, h: 1, x: 10, y: 1},
-			{w: 1, h: 1, x: 10, y: 2}
-		];
-
-		var DemoGrid = {
-			currentSize: 3,
-			buildElements: function($gridContainer, items) {
-				var item, i;
-				for (i = 0; i < items.length; i++) {
-					item = items[i];
-					$item = $(
-							'<li>' +
-							'<div class="inner">' +
-							'<div class="controls">' +
-							'<a href="#zoom1" class="resize" data-w="1" data-h="1">1x1</a>' +
-							'<a href="#zoom2" class="resize" data-w="2" data-h="1">2x1</a>' +
-							'<a href="#zoom3" class="resize" data-w="3" data-h="1">3x1</a>' +
-							'<a href="#zoom1" class="resize" data-w="1" data-h="2">1x2</a>' +
-							'<a href="#zoom2" class="resize" data-w="2" data-h="2">2x2</a>' +
-							'</div>' +
-							i +
-							'</div>' +
-							'</li>'
-					);
-					$item.attr({
-						'data-w': item.w,
-						'data-h': item.h,
-						'data-x': item.x,
-						'data-y': item.y
-					});
-					$gridContainer.append($item);
-				}
-			},
-			resize: function(size) {
-				if (size) {
-					this.currentSize = size;
-				}
-				$('#grid').gridList('resize', this.currentSize);
-			},
-			flashItems: function(items) {
-				// Hack to flash changed items visually
-				for (var i = 0; i < items.length; i++) {
-					(function($element) {
-						$element.addClass('changed')
-						setTimeout(function() {
-							$element.removeClass('changed');
-						}, 0);
-					})(items[i].$element);
-				}
-			}
+		var fixtures = {
+			DEMO: [
+				{id: 1, w: 1, h: 1, x: 0, y: 0},
+				{id: 2, w: 1, h: 2, x: 0, y: 1},
+				{id: 3, w: 2, h: 2, x: 1, y: 0},
+				{id: 4, w: 1, h: 1, x: 1, y: 2},
+				{id: 5, w: 2, h: 1, x: 2, y: 2}
+			]
 		};
 
-		$(window).resize(function() {
-			$('#grid').gridList('reflow');
-		});
-
 		$(function() {
-			DemoGrid.buildElements($('#grid'), fixtures.DEMO);
-
-			$('#grid').gridList({
-				direction: 'vertical',
-				lanes: DemoGrid.currentSize,
-				widthHeightRatio: 264 / 294,
-				heightToFontSizeRatio: 0.25,
-				onChange: function(changedItems) {
-					DemoGrid.flashItems(changedItems);
-				}
+			var gridStack = $('#grid').gridStack({
+				matrix: fixtures.DEMO,
+				onChange: function(changedItems, matrix) {
+					// TODO: tests
+					console.log(changedItems);
+					console.log(matrix);
+				},
+				lanes: 6,
+				elementPrototype: 'li.position-card',
+				elementLoaderUrl: 'gridlist_card'
 			});
+
 			$('#grid li .resize').click(function(e) {
 				e.preventDefault();
 				var itemElement = $(e.currentTarget).closest('li'),
 						itemWidth = $(e.currentTarget).data('w'),
 						itemHeight = $(e.currentTarget).data('h');
-
-				$('#grid').gridList('resizeItem', itemElement, {
-					w: itemWidth,
-					h: itemHeight
-				});
+				gridStack.resizeItem(itemElement, itemWidth, itemHeight);
 			});
 			$('.add-row').click(function(e) {
 				e.preventDefault();
-				DemoGrid.resize(DemoGrid.currentSize + 1);
+				gridStack.setLanes(gridStack.getLanes() + 1);
 			});
 			$('.remove-row').click(function(e) {
 				e.preventDefault();
-				DemoGrid.resize(Math.max(1, DemoGrid.currentSize - 1));
+				gridStack.setLanes(gridStack.getLanes() - 1);
 			});
 		});
 	</script>
