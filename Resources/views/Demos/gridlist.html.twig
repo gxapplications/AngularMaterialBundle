@@ -3,11 +3,7 @@
 {% block title %}GXAngularMaterialBundle:Demos:gridlist{% endblock %}
 
 {% block stylesheets %}
-	{# more on https://github.com/angular/bower-material/tree/master/themes #}
 	<style type="text/css">
-		md-content {
-			background: #444
-		}
 		.grid {
 			position: relative;
 			height: 100%;
@@ -22,7 +18,7 @@
 			position: absolute;
 			z-index: 1;
 			font-weight: bold;
-			line-height: 4em;
+			line-height: 1em;
 			text-align: center;
 			cursor: pointer;
 			-webkit-transition: top 0.2s,
@@ -40,7 +36,7 @@
 		}
 		.grid li .inner {
 			position: absolute;
-			background: #555;
+			xxxxbackground: #555;
 			top: 0;
 			bottom: 10px;
 			left: 10px;
@@ -64,39 +60,47 @@
 		.grid li.position-highlight .inner {
 			background: #333;
 		}
+
+		div.gridlist-card button.md-mini img.s14 {
+			width: 1.4rem;
+			height: 1.4rem;
+		}
+
 	</style>
 {% endblock %}
 
 {% block body %}
-<div layout="column" layout-fill style="overflow:hidden;">
+<div layout="column" layout-fill style="overflow:hidden;" ng-controller="MainCtrl">
 
 	<md-toolbar md-scroll-shrink>
 		<div class="md-toolbar-tools">
 			<md-button class="md-icon-button" aria-label="Settings">
-				<md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
+				Menu
 			</md-button>
 			<h2>
 				<span>Toolbar with Icon Buttons</span>
 			</h2>
 			<span flex></span>
 			<md-button class="md-icon-button" aria-label="Favorite">
-				<md-icon md-svg-icon="img/icons/favorite.svg" style="color: greenyellow;"></md-icon>
+				A
 			</md-button>
 			<md-button class="md-icon-button" aria-label="More">
-				<md-icon md-svg-icon="img/icons/more_vert.svg"></md-icon>
+				B
 			</md-button>
 		</div>
 	</md-toolbar>
 
 	<md-content flex>
-		<div flex ng-controller="AppCtrl">
+		<div flex>
 			<ul id="grid" class="grid">
 				<li class="position-highlight">
 					<div class="inner md-whiteframe-1dp"></div>
 				</li>
 				<li class="position-card">
 					<md-card class="md-whiteframe-6dp inner">
-						...
+						<div flex layout="row" layout-align="center center">
+							<md-progress-circular md-diameter="128"></md-progress-circular>
+						</div>
 					</md-card>
 				</li>
 			</ul>
@@ -106,11 +110,14 @@
 	<md-fab-toolbar class="md-fab-bottom-right" style="width:100%" md-direction="left">
 		<md-fab-trigger class="align-with-text">
 			<md-button aria-label="menu" class="md-fab md-warn">
-				<md-icon md-svg-src="img/icons/menu.svg"></md-icon>
+				Menu
 			</md-button>
 		</md-fab-trigger>
 		<md-toolbar>
 			<md-fab-actions class="md-toolbar-tools">
+				<md-switch class="md-hue-1" aria-label="Switch to edit mode" ng-model="ctrl.editMode">
+					Edit mode
+				</md-switch>
 				<md-button aria-label="comment" class="remove-row">
 					Remove row
 				</md-button>
@@ -127,8 +134,14 @@
 {% block javascripts %}
 	<script>
 		var app = angular.module('MyApp', ['ngMaterial']);
-		app.controller("AppCtrl", function($scope, $compile) {
+		app.config(function($mdThemingProvider, $controllerProvider) {
+			$mdThemingProvider.theme('default')
+					.dark();
+			app.controllerProvider = $controllerProvider;
+		});
 
+		app.controller("MainCtrl", function($scope) {
+			this.editMode = false;
 		});
 
 		var fixtures = {

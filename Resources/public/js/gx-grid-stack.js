@@ -35,12 +35,12 @@
 
         /* Resize grid */
         getLanes = function() {
-            return settings.lanes;
+            return params.lanes;
         };
         gridStack.getLanes = getLanes;
         setLanes = function(size) {
-            settings.lanes = size;
-            gridStack.gridList('resize', settings.lanes);
+            params.lanes = size;
+            gridStack.gridList('resize', params.lanes);
         };
         gridStack.setLanes = setLanes;
 
@@ -52,23 +52,24 @@
 
         /* Compile angular element after insertion into DOM */
         compileAngularElement = function(elSelector) {
-            var elSelector = (typeof elSelector == 'string') ? elSelector : null ;
+            //var elSelector = (typeof elSelector == 'string') ? elSelector : null ;
             // The new element to be added
             if (elSelector != null ) {
                 var $div = $( elSelector );
                 // The parent of the new element
                 var $target = $("[ng-app]");
-                angular.element($target).injector().invoke(['$compile', function ($compile) {
+                angular.element($target).injector().invoke(['$compile', '$q', function ($compile, $q) {
                     var $scope = angular.element($target).scope();
+                    var deferred = $q.defer();
                     $compile($div)($scope);
                     // Finally, refresh the watch expressions in the new element
-                    $scope.$apply();
+                    $scope.$apply(function () {
+                        deferred.resolve();
+                    });
                 }]);
             }
         };
         gridStack.compileAngularElement = compileAngularElement;
-
-        // TODO: fonctions angular, fonction de chargement auto apres init (ajax -> <li>.html() -> compileAngularElement): via un callback ? -> comme un 'tpl' dans ce cas !
 
         /* browser resized event */
         $( window ).resize(function(e) {
@@ -77,9 +78,9 @@
 
         /* init */
         var item, i, $item;
-        for (i = 0; i < settings.matrix.length; i++) {
-            item = settings.matrix[i];
-            $item = $(settings.elementPrototype, gridStack).first().clone();
+        for (i = 0; i < params.matrix.length; i++) {
+            item = params.matrix[i];
+            $item = $(params.elementPrototype, gridStack).first().clone();
             $item.attr({
                 'data-w': item.w,
                 'data-h': item.h,
@@ -89,9 +90,9 @@
             });
             gridStack.append($item);
             // auto load inner content
-            if (settings.elementLoaderUrl != false) {
+            if (params.elementLoaderUrl != false) {
                 $('li.position-card[data-id="' + item.id + '"] > .inner', gridStack).first().load(
-                    settings.elementLoaderUrl,
+                    params.elementLoaderUrl,
                     {id: item.id},
                     function () {
                         gridStack.compileAngularElement(this);
@@ -99,19 +100,28 @@
                 );
             }
         }
-        $(settings.elementPrototype, gridStack).first().remove(); // remove prototype element
+        $(params.elementPrototype, gridStack).first().remove(); // remove prototype element
         gridStack.gridList({
             direction: 'vertical',
-            lanes: settings.lanes,
-            widthHeightRatio: settings.widthHeightRatio,
-            heightToFontSizeRatio: 0.25,
+            lanes: params.lanes,
+            widthHeightRatio: params.widthHeightRatio,
+            heightToFontSizeRatio: 0.07,
             onChange: function(changedItems) {
-
-                // TODO: update settings.matrix:
-                // loop over changedItems, use their id. then loop into matrix to find the same one and update them.
-                settings.onChange(changedItems, settings.matrix);
+                var j, k;
+                for (j = 0; j < changedItems.length; j++) {
+                    for (k = 0; k < settings.matrix.length; k++) {
+                        if (params.matrix[k].id == changedItems[j].id) {
+                            params.matrix[k].w = changedItems[j].w;
+                            params.matrix[k].h = changedItems[j].h;
+                            params.matrix[k].x = changedItems[j].x;
+                            params.matrix[k].y = changedItems[j].y;
+                            break;
+                        }
+                    }
+                }
+                params.onChange(changedItems, params.matrix);
             }
-        }, settings.draggableParams );
+        }, params.draggableParams );
 
         return gridStack;
     };

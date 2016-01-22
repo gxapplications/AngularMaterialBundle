@@ -1,11 +1,52 @@
-<div>
-	<div ng-controller="CardCtrl-{{ id }}">
-		-{{ id }}-
+<div flex layout-fill layout-align="center center" class="gridlist-card">
+	<div ng-controller="CardCtrl-{{ id }} as ctrl" layout="row" layout-fill layout-align="center center">
+		<md-fab-toolbar class="md-fab-top-right" style="width:100%; top: 0; right: 0" md-direction="left">
+			<md-fab-trigger class="align-with-text">
+				<md-button aria-label="Card menu" class="md-fab md-mini md-hue-1 md-ink-ripple">
+					<md-icon><img src="{{ asset('bundles/gxangularmaterial/images/android_core_holodark/ic_action_edit.png') }}" class="s14" /></md-icon>
+				</md-button>
+			</md-fab-trigger>
+			<md-toolbar>
+				<md-fab-actions class="md-toolbar-tools">
+					<md-button aria-label="Configure" class="md-ink-ripple">
+						Configure
+					</md-button>
+					<md-menu>
+						<md-button aria-label="Change card size" class="md-button md-ink-ripple" ng-click="ctrl.openMenu($mdOpenMenu, $event)">
+							Size
+						</md-button>
+						<md-menu-content width="4">
+							<md-menu-item>
+								<md-button>
+									dfgfg
+								</md-button>
+							</md-menu-item>
+							<md-menu-divider></md-menu-divider>
+							<md-menu-item>
+								<md-button>
+									dfgdfg
+								</md-button>
+							</md-menu-item>
+						</md-menu-content>
+					</md-menu>
+					<md-button aria-label="Remove card" class="md-fab md-mini md-warn md-ink-ripple">
+						<md-icon><img src="{{ asset('bundles/gxangularmaterial/images/android_core_holodark/ic_action_delete.png') }}" class="s14" /></md-icon>
+					</md-button>
+				</md-fab-actions>
+			</md-toolbar>
+		</md-fab-toolbar>
+		<md-icon class="md-fab-top-left">un grip en haut, pour draggable</md-icon>
+		<div flex>-{{ id }}-</div>
+
 	</div>
 
 	<script>
-	    angular.module('MyApp', ['ngMaterial']).controller("CardCtrl-{{ id }}", function($scope) {
-			console.log('bonjour {{ id }}');
+		app.controllerProvider.register("CardCtrl-{{ id }}", function($scope) {
+			var originatorEv;
+			this.openMenu = function($mdOpenMenu, ev) {
+				originatorEv = ev;
+				$mdOpenMenu(ev);
+			};
 		});
 	</script>
 </div>

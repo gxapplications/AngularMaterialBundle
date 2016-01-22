@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v1.0.1-master-edfe2ad
+ * v1.0.3-master-34e0278
  */
 html, body {
   height: 100%;
@@ -10661,13 +10661,13 @@ md-dialog {
   md-dialog.md-transition-in {
     opacity: 1;
     transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-    -webkit-transform: translate3d(0, 0, 0) scale(1);
-            transform: translate3d(0, 0, 0) scale(1); }
+    -webkit-transform: translate(0, 0) scale(1);
+            transform: translate(0, 0) scale(1); }
   md-dialog.md-transition-out {
     opacity: 0;
     transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-    -webkit-transform: translate3d(0, 100%, 0) scale(0.2);
-            transform: translate3d(0, 100%, 0) scale(0.2); }
+    -webkit-transform: translate(0, 100%) scale(0.2);
+            transform: translate(0, 100%) scale(0.2); }
   md-dialog > form {
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -10883,8 +10883,8 @@ md-fab-speed-dial {
     opacity: 0;
     transition-duration: 0s; }
   md-fab-speed-dial.md-scale .md-fab-action-item {
-    -webkit-transform: scale(0.1);
-            transform: scale(0.1);
+    -webkit-transform: scale(0);
+            transform: scale(0);
     transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
     transition-duration: 0.14286s; }
 
@@ -11061,7 +11061,8 @@ md-icon {
   height: 24px;
   width: 24px; }
   md-icon svg {
-    pointer-events: none; }
+    pointer-events: none;
+    display: block; }
   md-icon[md-font-icon] {
     line-height: 1;
     width: auto; }
