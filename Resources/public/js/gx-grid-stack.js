@@ -19,7 +19,7 @@
                 {id: 5, w: 2, h: 1, x: 2, y: 2},
                 {id: 6, w: 1, h: 1, x: 3, y: 0}
             ],
-            widthHeightRatio: 264 / 294,
+            widthHeightRatio: 264 / 164,
             lanes: 3,
             elementPrototype: 'li.position-card',
             elementLoaderUrl: false,
@@ -29,9 +29,8 @@
         /* Override default settings with provided params, if any */
         if (params !== undefined) {
             $.extend(settings, params);
-        } else {
-            params = settings;
         }
+        params = settings;
 
         /* Resize grid */
         getLanes = function() {
@@ -105,7 +104,7 @@
             direction: 'vertical',
             lanes: params.lanes,
             widthHeightRatio: params.widthHeightRatio,
-            heightToFontSizeRatio: 0.07,
+            heightToFontSizeRatio: 0.1,
             onChange: function(changedItems) {
                 var j, k;
                 for (j = 0; j < changedItems.length; j++) {
@@ -121,7 +120,7 @@
                 }
                 params.onChange(changedItems, params.matrix);
             }
-        }, params.draggableParams );
+        }, settings.draggableParams );
 
         return gridStack;
     };

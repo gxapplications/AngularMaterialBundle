@@ -20,7 +20,6 @@
 			font-weight: bold;
 			line-height: 1em;
 			text-align: center;
-			cursor: pointer;
 			-webkit-transition: top 0.2s,
 			left 0.2s,
 			width 0.2s,
@@ -43,6 +42,11 @@
 			right: 0;
 			-webkit-transition: background 3s;
 			transition: background 3s;
+
+			-moz-user-select: none;
+			-khtml-user-select: none;
+			-webkit-user-select: none;
+			user-select: none;
 		}
 		.grid li.changed .inner {
 			background: #ffff66;
@@ -61,9 +65,16 @@
 			background: #333;
 		}
 
+		div.gridlist-card {
+			background: rgba(255,255,255,0.4);
+		}
 		div.gridlist-card button.md-mini img.s14 {
 			width: 1.4rem;
 			height: 1.4rem;
+		}
+
+		div.gridlist-card div.handle, div.gridlist-card div.md-fab-toolbar-content {
+			cursor: pointer;
 		}
 
 	</style>
@@ -73,7 +84,7 @@
 <div layout="column" layout-fill style="overflow:hidden;" ng-controller="MainCtrl">
 
 	<md-toolbar md-scroll-shrink>
-		<div class="md-toolbar-tools">
+		<div class="md-toolbar-tools" ng-cloak>
 			<md-button class="md-icon-button" aria-label="Settings">
 				Menu
 			</md-button>
@@ -82,7 +93,7 @@
 			</h2>
 			<span flex></span>
 			<md-button class="md-icon-button" aria-label="Favorite">
-				A
+				<md-icon style="line-height:34px;"><img src="{{ asset('bundles/gxangularmaterial/images/android_core_holodark/ic_action_edit.png') }}" width="24" height="24" /></md-icon>
 			</md-button>
 			<md-button class="md-icon-button" aria-label="More">
 				B
@@ -99,7 +110,7 @@
 				<li class="position-card">
 					<md-card class="md-whiteframe-6dp inner">
 						<div flex layout="row" layout-align="center center">
-							<md-progress-circular md-diameter="128"></md-progress-circular>
+							<md-progress-circular md-diameter="128" md-mode="indeterminate"></md-progress-circular>
 						</div>
 					</md-card>
 				</li>
@@ -107,22 +118,32 @@
 		</div>
 	</md-content>
 
-	<md-fab-toolbar class="md-fab-bottom-right" style="width:100%" md-direction="left">
+	<md-fab-toolbar class="md-fab-bottom-right" style="width:100%" md-direction="left" ng-cloak>
 		<md-fab-trigger class="align-with-text">
-			<md-button aria-label="menu" class="md-fab md-warn">
-				Menu
+			<md-button aria-label="menu" class="md-fab" ng-class="{{ '{' }}'md-warn': editMode.show == false, 'md-hue-1': editMode.show == true{{ '}' }}">
+				<md-icon style="line-height:34px;"><img src="{{ asset('bundles/gxangularmaterial/images/android_core_holodark/ic_action_edit.png') }}" width="24" height="24" /></md-icon>
 			</md-button>
 		</md-fab-trigger>
 		<md-toolbar>
 			<md-fab-actions class="md-toolbar-tools">
-				<md-switch class="md-hue-1" aria-label="Switch to edit mode" ng-model="ctrl.editMode">
+				<md-switch class="md-hue-1" aria-label="Switch to edit mode" ng-model="editMode.show">
 					Edit mode
 				</md-switch>
-				<md-button aria-label="comment" class="remove-row">
-					Remove row
+
+				<span ng-show="editMode.show">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+				<md-button aria-label="Less row" class="remove-row" ng-show="editMode.show">
+					<md-icon style="line-height:34px;"><img src="{{ asset('bundles/gxangularmaterial/images/android_core_holodark/ic_action_expand.png') }}" width="24" height="24" /></md-icon>
+					Less row
 				</md-button>
-				<md-button aria-label="comment" class="add-row">
-					Add row
+				<md-button aria-label="More row" class="add-row" ng-show="editMode.show">
+					<md-icon style="line-height:34px;"><img src="{{ asset('bundles/gxangularmaterial/images/android_core_holodark/ic_action_collapse.png') }}" width="24" height="24" /></md-icon>
+					More row
+				</md-button>
+
+				<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+				<md-button aria-label="Refresh" class="refresh-all">
+					<md-icon style="line-height:34px;"><img src="{{ asset('bundles/gxangularmaterial/images/android_core_holodark/ic_action_refresh.png') }}" width="24" height="24" /></md-icon>
+					Refresh
 				</md-button>
 			</md-fab-actions>
 		</md-toolbar>
@@ -133,30 +154,35 @@
 
 {% block javascripts %}
 	<script>
+		var gridStack = null;
+		var loaderUrl = 'gridlist_card';
 		var app = angular.module('MyApp', ['ngMaterial']);
+
+		// Angular configuration
 		app.config(function($mdThemingProvider, $controllerProvider) {
 			$mdThemingProvider.theme('default')
 					.dark();
 			app.controllerProvider = $controllerProvider;
 		});
 
-		app.controller("MainCtrl", function($scope) {
-			this.editMode = false;
+		// Angular Main controller
+		app.controller("MainCtrl", function($rootScope, $scope) {
+			$rootScope.editMode = {
+				show: false
+			};
+			$scope.editMode = $rootScope.editMode;
 		});
 
-		var fixtures = {
-			DEMO: [
-				{id: 1, w: 1, h: 1, x: 0, y: 0},
-				{id: 2, w: 1, h: 2, x: 0, y: 1},
-				{id: 3, w: 2, h: 2, x: 1, y: 0},
-				{id: 4, w: 1, h: 1, x: 1, y: 2},
-				{id: 5, w: 2, h: 1, x: 2, y: 2}
-			]
-		};
-
+		// init
 		$(function() {
-			var gridStack = $('#grid').gridStack({
-				matrix: fixtures.DEMO,
+			gridStack = $('#grid').gridStack({
+				matrix: [
+					{id: 1, w: 1, h: 1, x: 0, y: 0},
+					{id: 2, w: 1, h: 2, x: 0, y: 1},
+					{id: 3, w: 2, h: 2, x: 1, y: 0},
+					{id: 4, w: 1, h: 1, x: 1, y: 2},
+					{id: 5, w: 2, h: 1, x: 2, y: 2}
+				],
 				onChange: function(changedItems, matrix) {
 					// TODO: tests
 					console.log(changedItems);
@@ -164,7 +190,11 @@
 				},
 				lanes: 6,
 				elementPrototype: 'li.position-card',
-				elementLoaderUrl: 'gridlist_card'
+				elementLoaderUrl: loaderUrl,
+				draggableParams: {
+					handle: '.handle',
+					helper: 'original'
+				}
 			});
 
 			$('#grid li .resize').click(function(e) {
