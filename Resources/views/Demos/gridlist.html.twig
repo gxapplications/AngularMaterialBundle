@@ -66,7 +66,7 @@
 		}
 
 		div.gridlist-card {
-			background: rgba(255,255,255,0.4);
+			background: rgba(255,255,255,0.05);
 		}
 		div.gridlist-card button.md-mini img.s14 {
 			width: 1.4rem;
@@ -85,18 +85,17 @@
 
 	<md-toolbar md-scroll-shrink>
 		<div class="md-toolbar-tools" ng-cloak>
-			<md-button class="md-icon-button" aria-label="Settings">
-				Menu
-			</md-button>
 			<h2>
 				<span>Toolbar with Icon Buttons</span>
 			</h2>
 			<span flex></span>
-			<md-button class="md-icon-button" aria-label="Favorite">
+			<md-button aria-label="Homes">
 				<md-icon style="line-height:34px;"><img src="{{ asset('bundles/gxangularmaterial/images/android_core_holodark/ic_action_edit.png') }}" width="24" height="24" /></md-icon>
+				HOMES TODO
 			</md-button>
-			<md-button class="md-icon-button" aria-label="More">
-				B
+			<md-button aria-label="Logout">
+				<md-icon style="line-height:34px;"><img src="{{ asset('bundles/gxangularmaterial/images/android_core_holodark/ic_action_edit.png') }}" width="24" height="24" /></md-icon>
+				LOGOUT TODO
 			</md-button>
 		</div>
 	</md-toolbar>
@@ -129,18 +128,19 @@
 				<md-switch class="md-hue-1" aria-label="Switch to edit mode" ng-model="editMode.show">
 					Edit mode
 				</md-switch>
-
-				<span ng-show="editMode.show">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-				<md-button aria-label="Less row" class="remove-row" ng-show="editMode.show">
-					<md-icon style="line-height:34px;"><img src="{{ asset('bundles/gxangularmaterial/images/android_core_holodark/ic_action_expand.png') }}" width="24" height="24" /></md-icon>
-					Less row
-				</md-button>
-				<md-button aria-label="More row" class="add-row" ng-show="editMode.show">
-					<md-icon style="line-height:34px;"><img src="{{ asset('bundles/gxangularmaterial/images/android_core_holodark/ic_action_collapse.png') }}" width="24" height="24" /></md-icon>
-					More row
-				</md-button>
-
 				<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+
+				<span ng-show="editMode.show">&nbsp;Colmuns</span>
+				<md-slider ng-show="editMode.show" flex="no-shrink" style="width: 10em;"
+						   md-discrete ng-model="editMode.columnCount" step="1" min="3" max="7" aria-label="columnCount">
+				</md-slider>
+				<span ng-show="editMode.show">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+
+				<md-button aria-label="Add card" class="add-card">
+					<md-icon style="line-height:34px;"><img src="{{ asset('bundles/gxangularmaterial/images/android_core_holodark/ic_action_add_to_queue.png') }}" width="24" height="24" /></md-icon>
+					Add card // TODO !3 sidenav !
+				</md-button>
+
 				<md-button aria-label="Refresh" class="refresh-all">
 					<md-icon style="line-height:34px;"><img src="{{ asset('bundles/gxangularmaterial/images/android_core_holodark/ic_action_refresh.png') }}" width="24" height="24" /></md-icon>
 					Refresh
@@ -168,15 +168,20 @@
 		// Angular Main controller
 		app.controller("MainCtrl", function($rootScope, $scope) {
 			$rootScope.editMode = {
-				show: false
+				show: false,
+				columnCount: 6 // TODO: loaded in twig dynamically
 			};
 			$scope.editMode = $rootScope.editMode;
+			$scope.$watch('editMode.columnCount', function() {
+				if (gridStack !== null) // cancel effect at init
+					gridStack.setLanes($scope.editMode.columnCount);
+			});
 		});
 
 		// init
 		$(function() {
 			gridStack = $('#grid').gridStack({
-				matrix: [
+				matrix: [ // TODO: loaded in twig dynamically
 					{id: 1, w: 1, h: 1, x: 0, y: 0},
 					{id: 2, w: 1, h: 2, x: 0, y: 1},
 					{id: 3, w: 2, h: 2, x: 1, y: 0},
@@ -184,33 +189,32 @@
 					{id: 5, w: 2, h: 1, x: 2, y: 2}
 				],
 				onChange: function(changedItems, matrix) {
-					// TODO: tests
+					// TODO: save data server side.
 					console.log(changedItems);
 					console.log(matrix);
 				},
-				lanes: 6,
+				lanes: 6, // TODO: loaded in twig dynamically
 				elementPrototype: 'li.position-card',
-				elementLoaderUrl: loaderUrl,
+				elementLoaderUrl: loaderUrl, // TODO
 				draggableParams: {
 					handle: '.handle',
 					helper: 'original'
 				}
 			});
 
+			// TODO !1: modif des tailles de card a recoder (menu contextuel des grid-cards, puis dynamisme js)
 			$('#grid li .resize').click(function(e) {
 				e.preventDefault();
 				var itemElement = $(e.currentTarget).closest('li'),
-						itemWidth = $(e.currentTarget).data('w'),
-						itemHeight = $(e.currentTarget).data('h');
+					itemWidth = $(e.currentTarget).data('w'),
+					itemHeight = $(e.currentTarget).data('h');
 				gridStack.resizeItem(itemElement, itemWidth, itemHeight);
 			});
-			$('.add-row').click(function(e) {
+
+			$('.md-toolbar-tools button.refresh-all').click(function(e) {
 				e.preventDefault();
-				gridStack.setLanes(gridStack.getLanes() + 1);
-			});
-			$('.remove-row').click(function(e) {
-				e.preventDefault();
-				gridStack.setLanes(gridStack.getLanes() - 1);
+				console.log('Fraicheur de vivre !');
+				// TODO !0: appeler le refresh de chaque li dans un .each() ? ou methode de gridStack ?
 			});
 		});
 	</script>

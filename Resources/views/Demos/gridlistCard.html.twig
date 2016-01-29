@@ -11,12 +11,12 @@
 			</md-fab-trigger>
 			<md-toolbar>
 				<md-fab-actions class="md-toolbar-tools">
-					<md-button aria-label="Configure" class="md-ink-ripple">
-						Conf
+					<md-button aria-label="Configure" class="md-icon-button">
+						<md-icon><img src="{{ asset('bundles/gxangularmaterial/images/android_core_holodark/ic_action_settings.png') }}" class="s14" /></md-icon>
 					</md-button>
 					<md-menu>
 						<md-button aria-label="Change card size" class="md-button md-ink-ripple" ng-click="ctrl.openMenu($mdOpenMenu, $event)">
-							Size
+							Size // TODO !1
 						</md-button>
 						<md-menu-content width="4">
 							<md-menu-item>
@@ -32,7 +32,8 @@
 							</md-menu-item>
 						</md-menu-content>
 					</md-menu>
-					<md-button aria-label="Remove card" class="md-fab md-mini md-warn md-ink-ripple">
+					<span>&nbsp;&nbsp;&nbsp;</span>
+					<md-button aria-label="Remove card" class="md-icon-button md-warn">
 						<md-icon><img src="{{ asset('bundles/gxangularmaterial/images/android_core_holodark/ic_action_delete.png') }}" class="s14" /></md-icon>
 					</md-button>
 				</md-fab-actions>
@@ -78,12 +79,16 @@
 							} else {
 								$interval.cancel($scope.refresher.timer);
 								gridStack.compileAngularElement(this);
-								// TODO: destroy current controller ???
 							}
 						}
 					);
 				}
 			}, $scope.refresher.interval/10, 0, true);
+			$scope.$on("$destroy",
+				function() {
+					$interval.cancel($scope.refresher.timer);
+				}
+			);
 		});
 	</script>
 </div>
