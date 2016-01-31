@@ -16,18 +16,54 @@
 					</md-button>
 					<md-menu>
 						<md-button aria-label="Change card size" class="md-button md-ink-ripple" ng-click="ctrl.openMenu($mdOpenMenu, $event)">
-							Size // TODO !1
+							Size
 						</md-button>
-						<md-menu-content width="4">
+						<md-menu-content width="3">
 							<md-menu-item>
-								<md-button>
-									dfgfg
+								<md-button ng-click="ctrl.resize(1, 1)">
+									1↔ , 1↕
+								</md-button>
+							</md-menu-item>
+							<md-menu-item>
+								<md-button ng-click="ctrl.resize(2, 1)">
+									2↔ , 1↕
+								</md-button>
+							</md-menu-item>
+							<md-menu-item>
+								<md-button ng-click="ctrl.resize(3, 1)">
+									3↔ , 1↕
 								</md-button>
 							</md-menu-item>
 							<md-menu-divider></md-menu-divider>
 							<md-menu-item>
-								<md-button>
-									dfgdfg
+								<md-button ng-click="ctrl.resize(1, 2)">
+									1↔ , 2↕
+								</md-button>
+							</md-menu-item>
+							<md-menu-item>
+								<md-button ng-click="ctrl.resize(2, 2)">
+									2↔ , 2↕
+								</md-button>
+							</md-menu-item>
+							<md-menu-item>
+								<md-button ng-click="ctrl.resize(3, 2)">
+									3↔ , 2↕
+								</md-button>
+							</md-menu-item>
+							<md-menu-divider></md-menu-divider>
+							<md-menu-item>
+								<md-button ng-click="ctrl.resize(1, 3)">
+									1↔ , 3↕
+								</md-button>
+							</md-menu-item>
+							<md-menu-item>
+								<md-button ng-click="ctrl.resize(2, 3)">
+									2↔ , 3↕
+								</md-button>
+							</md-menu-item>
+							<md-menu-item>
+								<md-button ng-click="ctrl.resize(3, 3)">
+									3↔ , 3↕
 								</md-button>
 							</md-menu-item>
 						</md-menu-content>
@@ -59,16 +95,20 @@
 				$mdOpenMenu(ev);
 			};
 
+			// resize menu
+			this.resize = function(w, h) {
+				var element = $('#grid li[data-id="{{ id }}"]');
+				gridStack.resizeItem(element, w, h);
+			};
+
 			// refresh timer
 			$scope.refresher = {
 				percent: 0,
-				interval: 0.5*60*100,
+				interval: 1*60*100,
 				timer: null,
-				hue: ''
-			};
-			$scope.refresher.timer = $interval(function() {
-				$scope.refresher.percent += 1;
-				if ($scope.refresher.percent == 101) {
+				hue: '',
+				refresh: function() {
+					$scope.refresher.percent = 102;
 					$('li.position-card[data-id="{{ id }}"] > .inner', gridStack).first().load(
 						loaderUrl,
 						{ id: {{ id }} },
@@ -83,10 +123,18 @@
 						}
 					);
 				}
+			};
+			$scope.refresher.timer = $interval(function() {
+				$scope.refresher.percent += 1;
+				if ($scope.refresher.percent == 101) {
+					$scope.refresher.refresh();
+				}
 			}, $scope.refresher.interval/10, 0, true);
+			$rootScope.refresh[{{ id }}] = $scope.refresher.refresh;
 			$scope.$on("$destroy",
 				function() {
 					$interval.cancel($scope.refresher.timer);
+					$rootScope.refresh[{{ id }}] = null;
 				}
 			);
 		});

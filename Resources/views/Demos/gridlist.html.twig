@@ -81,7 +81,7 @@
 {% endblock %}
 
 {% block body %}
-<div layout="column" layout-fill style="overflow:hidden;" ng-controller="MainCtrl">
+<div layout="column" layout-fill style="overflow:hidden;" ng-controller="MainCtrl as MainCtrl">
 
 	<md-toolbar md-scroll-shrink>
 		<div class="md-toolbar-tools" ng-cloak>
@@ -141,7 +141,7 @@
 					Add card // TODO !3 sidenav !
 				</md-button>
 
-				<md-button aria-label="Refresh" class="refresh-all">
+				<md-button aria-label="Refresh" ng-click="MainCtrl.refreshAll()">
 					<md-icon style="line-height:34px;"><img src="{{ asset('bundles/gxangularmaterial/images/android_core_holodark/ic_action_refresh.png') }}" width="24" height="24" /></md-icon>
 					Refresh
 				</md-button>
@@ -167,6 +167,7 @@
 
 		// Angular Main controller
 		app.controller("MainCtrl", function($rootScope, $scope) {
+			// edit mode
 			$rootScope.editMode = {
 				show: false,
 				columnCount: 6 // TODO: loaded in twig dynamically
@@ -176,6 +177,15 @@
 				if (gridStack !== null) // cancel effect at init
 					gridStack.setLanes($scope.editMode.columnCount);
 			});
+
+			// refresh features
+			$rootScope.refresh = []; // functions to execute to force refresh of a card.
+			this.refreshAll = function() {
+				for (i = 0; i < $rootScope.refresh.length; i++) {
+					if (typeof $rootScope.refresh[i] == 'function')
+					$rootScope.refresh[i]();
+				}
+			};
 		});
 
 		// init
@@ -200,21 +210,6 @@
 					handle: '.handle',
 					helper: 'original'
 				}
-			});
-
-			// TODO !1: modif des tailles de card a recoder (menu contextuel des grid-cards, puis dynamisme js)
-			$('#grid li .resize').click(function(e) {
-				e.preventDefault();
-				var itemElement = $(e.currentTarget).closest('li'),
-					itemWidth = $(e.currentTarget).data('w'),
-					itemHeight = $(e.currentTarget).data('h');
-				gridStack.resizeItem(itemElement, itemWidth, itemHeight);
-			});
-
-			$('.md-toolbar-tools button.refresh-all').click(function(e) {
-				e.preventDefault();
-				console.log('Fraicheur de vivre !');
-				// TODO !0: appeler le refresh de chaque li dans un .each() ? ou methode de gridStack ?
 			});
 		});
 	</script>
