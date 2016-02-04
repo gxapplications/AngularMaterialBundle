@@ -35,7 +35,6 @@
 		}
 		.grid li .inner {
 			position: absolute;
-			xxxxbackground: #555;
 			top: 0;
 			bottom: 10px;
 			left: 10px;
@@ -136,9 +135,9 @@
 				</md-slider>
 				<span ng-show="editMode.show">&nbsp;&nbsp;&nbsp;&nbsp;</span>
 
-				<md-button aria-label="Add card" class="add-card">
+				<md-button aria-label="Add card" ng-click="MainCtrl.toggleAddWidgets()">
 					<md-icon style="line-height:34px;"><img src="{{ asset('bundles/gxangularmaterial/images/android_core_holodark/ic_action_add_to_queue.png') }}" width="24" height="24" /></md-icon>
-					Add card // TODO !3 sidenav !
+					Add card // TODO !0: https://material.angularjs.org/latest/demo/sidenav
 				</md-button>
 
 				<md-button aria-label="Refresh" ng-click="MainCtrl.refreshAll()">
@@ -148,7 +147,39 @@
 			</md-fab-actions>
 		</md-toolbar>
 	</md-fab-toolbar>
+
 </div>
+
+<md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="addWidgetsSidenav" ng-cloak>
+	<md-toolbar class="md-theme-light">
+		<h1 class="md-toolbar-tools">Add a widget</h1>
+	</md-toolbar>
+	<md-list ng-controller="AddWidgetsCtrl as AddWidgetsCtrl">
+		<md-list-item ng-click="navigateTo('data usage', $event)">
+			<md-icon md-svg-icon="cached"></md-icon>
+			<p>Data Usage</p>
+		</md-list-item>
+		<md-divider></md-divider>
+		<md-list-item ng-click="navigateTo('data usage', $event)">
+			<md-icon md-svg-icon="cached"></md-icon>
+			<p>Data Usage</p>
+		</md-list-item>
+		<md-list-item ng-click="navigateTo('data usage', $event)">
+			<md-icon md-svg-icon="cached"></md-icon>
+			<p>Data Usage</p>
+		</md-list-item>
+		<md-list-item ng-click="navigateTo('data usage', $event)">
+			<md-icon md-svg-icon="cached"></md-icon>
+			<p>Data Usage</p>
+		</md-list-item>
+		<md-divider></md-divider>
+		<md-list-item>
+			<md-button ng-click="close()">
+				Close Sidenav Right
+			</md-button>
+		</md-list-item>
+	</md-list>
+</md-sidenav>
 
 {% endblock %}
 
@@ -166,7 +197,7 @@
 		});
 
 		// Angular Main controller
-		app.controller("MainCtrl", function($rootScope, $scope) {
+		app.controller("MainCtrl", function($rootScope, $scope, $mdSidenav) {
 			// edit mode
 			$rootScope.editMode = {
 				show: false,
@@ -185,6 +216,24 @@
 					if (typeof $rootScope.refresh[i] == 'function')
 					$rootScope.refresh[i]();
 				}
+			};
+
+			// sidenav new widgets
+			$rootScope.addWidgetsPanel = {
+				toggle: function() {
+					$mdSidenav('addWidgetsSidenav').toggle();
+				},
+				isOpen: function() {
+					return $mdSidenav('addWidgetsSidenav').isOpen();
+				}
+			};
+			this.toggleAddWidgets = $scope.addWidgetsPanel.toggle;
+		});
+
+		// Angular Add widgets sidenav controller
+		app.controller('AddWidgetsCtrl', function ($scope, $mdSidenav) {
+			$scope.close = function () {
+				$mdSidenav('addWidgetsSidenav').close();
 			};
 		});
 
