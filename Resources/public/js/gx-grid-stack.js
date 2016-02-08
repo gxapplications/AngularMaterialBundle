@@ -6,7 +6,7 @@
     /*jslint browser: true */
 
     $.fn.gridStack = function (params) {
-        var settings, gridStack, getLanes, setLanes, resizeItem, compileAngularElement;
+        var settings, gridStack, getLanes, setLanes, resizeItem, compileAngularElement, findFreeSpaceXY, grid;
         gridStack = $(this);
 
         /* Specify default settings */
@@ -40,12 +40,14 @@
         setLanes = function(size) {
             params.lanes = size;
             gridStack.gridList('resize', params.lanes);
+            grid = gridStack.data('_gridList').gridList.grid;
         };
         gridStack.setLanes = setLanes;
 
         /* Resize item */
         resizeItem = function(itemElement, w, h) {
             gridStack.gridList('resizeItem', itemElement, { w: w, h: h });
+            grid = gridStack.data('_gridList').gridList.grid;
         };
         gridStack.resizeItem = resizeItem;
 
@@ -70,9 +72,37 @@
         };
         gridStack.compileAngularElement = compileAngularElement;
 
+        /* search nearest space for given width and height. Returns X and Y positions */
+        findFreeSpaceXY = function(w, h) {
+            var searchX, searchY;
+            for (searchY = 0; searchY < 64; searchY++) {
+                next_search:
+                for (searchX = 0; searchX < settings.lanes; searchX++) {
+                    // cell occupied
+                    if (typeof grid[searchY] != 'undefined' && typeof grid[searchY][searchX] != 'undefined' && grid[searchY][searchX] != null) continue;
+                    // cell free and needed space is [1,1]. Found!
+                    if (w == 1 && h == 1) return {x: searchX, y: searchY};
+                    // cell free. Check for w overflow.
+                    if (searchX + w - 1 >= settings.lanes) continue;
+                    // cell free. Check for space
+                    for (var j = searchY; j < searchY + h; j++) {
+                        for (var i = searchX; i < searchX + w; i++) {
+                            if (typeof grid[j] != 'undefined' && typeof grid[j][i] != 'undefined' &&  grid[j][i] != null) {
+                                continue next_search;
+                            } // continue on searchX loop
+                        }
+                    }
+                    // cell free. Enough space
+                    return {x: searchX, y: searchY};
+                }
+            }
+        }
+        gridStack.findFreeSpaceXY = findFreeSpaceXY;
+
         /* browser resized event */
         $( window ).resize(function(e) {
             gridStack.gridList('reflow');
+            grid = gridStack.data('_gridList').gridList.grid;
         });
 
         /* init */
@@ -106,6 +136,7 @@
             widthHeightRatio: params.widthHeightRatio,
             heightToFontSizeRatio: 0.1,
             onChange: function(changedItems) {
+                grid = gridStack.data('_gridList').gridList.grid;
                 var j, k;
                 for (j = 0; j < changedItems.length; j++) {
                     for (k = 0; k < settings.matrix.length; k++) {
@@ -121,6 +152,7 @@
                 params.onChange(changedItems, params.matrix);
             }
         }, settings.draggableParams );
+        grid = gridStack.data('_gridList').gridList.grid;
 
         return gridStack;
     };
