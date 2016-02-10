@@ -19,12 +19,12 @@
                 {id: 5, w: 2, h: 1, x: 2, y: 2},
                 {id: 6, w: 1, h: 1, x: 3, y: 0}
             ],
-            widthHeightRatio: 264 / 164,
+            widthHeightRatio: 264 / 162,
             lanes: 3,
             elementPrototype: 'li.position-card',
             elementLoaderUrl: false,
             onChange: function(changedItems, matrix) {},
-            draggableParams: {},
+            draggableParams: {}
         };
         /* Override default settings with provided params, if any */
         if (params !== undefined) {
@@ -96,16 +96,17 @@
                     return {x: searchX, y: searchY};
                 }
             }
-        }
+        };
         gridStack.findFreeSpaceXY = findFreeSpaceXY;
 
         /* browser resized event */
-        $( window ).resize(function(e) {
+        $( window ).resize(function() {
             gridStack.gridList('reflow');
             grid = gridStack.data('_gridList').gridList.grid;
         });
 
         /* init */
+        $(params.elementPrototype + ':not(:first)', gridStack).remove(); // remove existing li (re-init case)
         var item, i, $item;
         for (i = 0; i < params.matrix.length; i++) {
             item = params.matrix[i];
@@ -117,6 +118,7 @@
                 'data-y': item.y,
                 'data-id': item.id
             });
+            $item.show();
             gridStack.append($item);
             // auto load inner content
             if (params.elementLoaderUrl != false) {
@@ -129,7 +131,7 @@
                 );
             }
         }
-        $(params.elementPrototype, gridStack).first().remove(); // remove prototype element
+        $(params.elementPrototype, gridStack).first().hide(); // hide prototype element
         gridStack.gridList({
             direction: 'vertical',
             lanes: params.lanes,
